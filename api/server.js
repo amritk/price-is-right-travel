@@ -6,9 +6,13 @@
  */
 
 const express = require('express')
+const cors = require('cors')
 const trips = require('./database/trips.json')
 const app = express()
 const port = 3001
+
+// Make sure to allow CORS
+app.use(cors())
 
 /**
  * Return a list of all of the city names
