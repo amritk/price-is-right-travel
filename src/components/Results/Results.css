@@ -1,0 +1,17 @@
+.Results {
+  padding-top: 96px;
+  max-width: 1280px;
+  text-align: left;
+  margin: auto;
+}
+
+span.subheader {
+  color: #0000008a;
+}
+
+.popular {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding-top: 24px;
+}

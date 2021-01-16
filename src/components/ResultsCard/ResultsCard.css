@@ -1,0 +1,11 @@
+.ResultsCard {
+  width: 24%;
+  height: 200px;
+  margin-bottom: 20px;
+  background-size: cover;
+}
+
+.title {
+  background: linear-gradient(to bottom, #000000b3 0%, #0000004d 70%, #0000 100%);
+  color: white;
+}
