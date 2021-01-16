@@ -2,4 +2,10 @@
     background: white;
     border-radius: 3px;
     padding: 16px;
+    max-width: 1200px;
+}
+
+.SearchBar .MuiInput-underline:before,
+.SearchBar .MuiInput-underline:after {
+    content: none;
 }
