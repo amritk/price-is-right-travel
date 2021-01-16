@@ -1,6 +1,6 @@
 import './SearchBar.css'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import { Button, TextField } from '@material-ui/core'
+import { Button, Divider, TextField } from '@material-ui/core'
 import React from 'react'
 
 class SearchBar extends React.Component {
@@ -33,6 +33,8 @@ class SearchBar extends React.Component {
 
   render () {
 
+    console.log(this.state);
+
     return (
       <div className="SearchBar">
 
@@ -42,45 +44,60 @@ class SearchBar extends React.Component {
           options={this.state.cities}
           style={{ width: 300 }}
           noOptionsText="No results"
+          onChange={ (ev, val) => this.setState({ destination: val })}
           renderInput={(params) =>  
             <TextField {...params} 
               label="Destination" 
               autoFocus={true}
               variant="standard" 
-              onChange={ ev => this.setState({destination: ev.target.value })}
             />
           }
         />
+        <Divider orientation="vertical" flexItem />
 
         {/* Min Price */}
         <TextField
           label="Minimum Price" 
           type="number" 
           step="0.01"
-          onChange={ ev => this.setState({ minPrice: ev.target.value })}
+          onChange={ (ev, val) => this.setState({ minPrice: val })}
           variant="standard" 
         />
+        <Divider orientation="vertical" flexItem />
 
         {/* Max Price */}
         <TextField
           label="Maximum Price" 
           type="number" 
           step="0.01"
-          onChange={ ev => this.setState({ maxPrice: ev.target.value })}
+          onChange={ (ev, val) => this.setState({ maxPrice: val })}
           variant="standard" 
         />
+        <Divider orientation="vertical" flexItem />
 
         {/* Start Date */}
         <TextField
-          label="Trip Start date"
+          label="Departure date"
           type="date"
-          onChange={ ev => this.setState({ startDate: ev.target.value })}
-          value={this.state.startDate} 
+          onChange={ (ev, val) => this.setState({ startDate: val })}
           variant="standard" 
           InputLabelProps={{
             shrink: true
           }}
         />
+        <Divider orientation="vertical" flexItem />
+
+        {/* Start Date */}
+        {/* <TextField
+          label="Duration"
+          type="select"
+          onChange={ (ev, val) => this.setState({ startDate: val })}
+          variant="standard" 
+          InputLabelProps={{
+            shrink: true
+          }}
+        />
+        <Divider orientation="vertical" flexItem /> */}
 
         {/* Execute the search */}
         <Button 

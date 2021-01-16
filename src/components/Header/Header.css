@@ -6,3 +6,12 @@
   position: relative;
   width: 100%;
 }
+
+h1 {
+  color: #fff;
+  position: absolute;
+  left: 6vw;
+  font-size: 38px;
+  top: 6vw;
+  text-shadow: 2px 2px 2px rgba(0,0,0, 0.25);
+}
