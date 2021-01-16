@@ -31,19 +31,35 @@ app.get('/cities', (req, res) => {
 })
 
 /**
+ * Return a list of "popular" trips
+ */
+app.get('/popular', (req, res) => {
+
+  try {
+    // Shuffle the trips then take first 10
+    const popular = trips.sort(() => Math.random() - 0.5).slice(0, 10)
+    res.json(popular)
+  }
+  catch (e) {
+    console.log(e)
+    res.send('There was an unexpected error')
+  }
+})
+
+/**
  * "Query" the "database" fro trips using the following query parameters
  * @param { string } destination the destination city
  * @param { date } startDate the date that the trip begins
  * @param { date } endDate the date that the trip ends
- * @param { number } startPrice the lower end of the budget
- * @param { number } endPrice the higher end of the budget
+ * @param { number } minPrice the lower end of the budget
+ * @param { number } maxPrice the higher end of the budget
  */
 app.get('/trips', (req, res) => {
   
   try {
     const destination = req.query.destination 
-    const startPrice = parseFloat(req.query.startPrice)
-    const endPrice = parseFloat(req.query.endPrice)
+    const minPrice = parseFloat(req.query.minPrice)
+    const maxPrice = parseFloat(req.query.maxPrice)
     const startDate = new Date(req.query.startDate)
     const endDate = new Date(req.query.endDate)
     
@@ -55,7 +71,7 @@ app.get('/trips', (req, res) => {
       const destinationPasses = destination.toLowerCase() === trip.destination.toLowerCase()
       const datePasses = new Date(trip.start_date).getTime() === startDate.getTime() 
       && new Date(trip.end_date).getTime() === endDate.getTime()
-      const pricePasses = trip.price >= startPrice && trip.price <= endPrice
+      const pricePasses = trip.price >= minPrice && trip.price <= maxPrice
       
       // We have a perfect match
       if (destinationPasses && pricePasses && datePasses) {
