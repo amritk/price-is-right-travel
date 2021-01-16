@@ -22,7 +22,9 @@ app.get('/cities', (req, res) => {
   try {
     // Simple map to grab city names
     const cityNames = trips.map(entry => entry.destination)
-    res.json(cityNames)
+    // Make sure they are unique
+    const unique = [...new Set(cityNames)]
+    res.json(unique)
   }
   catch (e) {
     console.log(e)
@@ -37,7 +39,7 @@ app.get('/popular', (req, res) => {
 
   try {
     // Shuffle the trips then take first 10
-    const popular = trips.sort(() => Math.random() - 0.5).slice(0, 10)
+    const popular = trips.sort(() => Math.random() - 0.5).slice(0, 8)
     res.json(popular)
   }
   catch (e) {
