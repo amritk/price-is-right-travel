@@ -33,8 +33,6 @@ class SearchBar extends React.Component {
 
   render () {
 
-    console.log(this.state)
-
     return (
       <div className="SearchBar">
 
@@ -47,7 +45,7 @@ class SearchBar extends React.Component {
           renderInput={(params) =>  
             <TextField {...params} 
               label="Destination" 
-              autoFocus="true"
+              autoFocus={true}
               variant="standard" 
               onChange={ ev => this.setState({destination: ev.target.value })}
             />
