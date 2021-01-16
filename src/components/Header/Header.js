@@ -12,7 +12,10 @@ class Header extends React.Component {
   render () {
     return (
       <div className="Header" style={ sectionStyle }>
-        <h1>A journey of a thousand miles begins with a single click</h1>
+        {/* A nice quote */}
+        <section className="container">
+          <h1>A journey of a thousand miles begins with a single click</h1>
+        </section>
         {/* The Main Search bar */}
         <SearchBar></SearchBar>
       </div>
