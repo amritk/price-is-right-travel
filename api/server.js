@@ -65,8 +65,8 @@ app.get('/trips', (req, res) => {
     const startDate = new Date(req.query.startDate)
     const endDate = new Date(req.query.endDate)
     
-    const completeMatches = []
-    const partialMatches = []
+    let completeMatches = []
+    let partialMatches = []
     
     // Using a simple loop for "querying"
     trips.forEach(trip => {
@@ -84,6 +84,10 @@ app.get('/trips', (req, res) => {
         partialMatches.push(trip)
       }
     })
+
+    // Sort by price
+    completeMatches = completeMatches.sort(trip => trip.price)
+    partialMatches = partialMatches.sort(trip => trip.price)
     
     res.json({
       completeMatches,

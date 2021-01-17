@@ -18,3 +18,19 @@
 .SearchBar .MuiInput-underline:after {
     content: none;
 }
+
+.MuiAutocomplete-root {
+    width: 180px !important;
+}
+
+.MuiFormControl-root {
+    max-width: 180px;
+}
+
+.MuiSelect-selectMenu {
+    text-align: left;
+}
+
+.duration {
+    width: 180px;
+}

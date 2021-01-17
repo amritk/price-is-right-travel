@@ -1,7 +1,16 @@
 import './SearchBar.css'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import { Button, Divider, TextField } from '@material-ui/core'
+import { 
+  Button, 
+  Divider, 
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select, 
+  TextField 
+} from '@material-ui/core'
 import React from 'react'
+import store from '../../store/store'
 
 class SearchBar extends React.Component {
   constructor() {
@@ -9,10 +18,10 @@ class SearchBar extends React.Component {
     this.state = {
       cities: [],
       destination: null,
-      startDate: '',
-      endDate: '',
+      startDate: null,
       minPrice: null,
-      maxPrice: null
+      maxPrice: null,
+      duration: '',
     }
   }
 
@@ -27,11 +36,13 @@ class SearchBar extends React.Component {
       })
     }
     catch(e) {
+      alert('Server Error, please make sure the Server is running with "yarn start"')
       console.error(e)
-    } 
+    }
   }
 
   render () {
+    console.log(store.getState().results);
     return (
       <div className="SearchBar">
 
@@ -41,6 +52,7 @@ class SearchBar extends React.Component {
           options={this.state.cities}
           style={{ width: 300 }}
           noOptionsText="No results"
+          fullWidth={false}
           onChange={ (ev, val) => this.setState({ destination: val })}
           renderInput={(params) =>  
             <TextField {...params} 
@@ -57,7 +69,7 @@ class SearchBar extends React.Component {
           label="Minimum Price" 
           type="number" 
           step="0.01"
-          onChange={ (ev, val) => this.setState({ minPrice: val })}
+          onChange={ ev => this.setState({ minPrice: ev.target.value })}
           variant="standard" 
         />
         <Divider orientation="vertical" flexItem />
@@ -67,7 +79,7 @@ class SearchBar extends React.Component {
           label="Maximum Price" 
           type="number" 
           step="0.01"
-          onChange={ (ev, val) => this.setState({ maxPrice: val })}
+          onChange={ ev => this.setState({ maxPrice: ev.target.value })}
           variant="standard" 
         />
         <Divider orientation="vertical" flexItem />
@@ -76,7 +88,7 @@ class SearchBar extends React.Component {
         <TextField
           label="Departure date"
           type="date"
-          onChange={ (ev, val) => this.setState({ startDate: val })}
+          onChange={ ev => this.setState({ startDate: ev.target.value })}
           variant="standard" 
           InputLabelProps={{
             shrink: true
@@ -84,27 +96,29 @@ class SearchBar extends React.Component {
         />
         <Divider orientation="vertical" flexItem />
 
-        {/* Start Date */}
-        {/* <TextField
-          label="Duration"
-          type="select"
-          onChange={ (ev, val) => this.setState({ startDate: val })}
-          variant="standard" 
-          InputLabelProps={{
-            shrink: true
-          }}
-        />
-        <Divider orientation="vertical" flexItem /> */}
+        {/* Duration */}
+        <FormControl className="duration">
+          <InputLabel id="duration-label">Duration</InputLabel>
+          <Select
+            labelId="duration-label"
+            value={this.state.duration}
+            onChange={ ev => this.setState({ duration: ev.target.value })}
+          >
+            <MenuItem value={1}>One Night</MenuItem>
+            <MenuItem value={2}>2-3 Nights</MenuItem>
+            <MenuItem value={3}>3-5 Nights</MenuItem>
+            <MenuItem value={5}>5-8 Nights</MenuItem>
+          </Select>
+        </FormControl>
 
         {/* Execute the search */}
         <Button 
           disabled={ 
             !this.state.destination ||
-            !this.state.startDate.length ||
-            !this.state.endDate.length ||
+            !this.state.startDate ||
+            typeof this.state.duration !== 'number' ||
             !this.state.maxPrice ||
-            !this.state.minPrice && 
-            this.state.minPrice !== 0
+            (!this.state.minPrice && this.state.minPrice !== 0)
           } 
           variant="contained" 
           color="primary"
