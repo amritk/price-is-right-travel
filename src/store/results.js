@@ -11,8 +11,14 @@ const initialState =  {
 export const searchTrips = createAsyncThunk(
   'searchTrips',
   async params => {
-    const response = await fetch('http://localhost:3001/trips?' + new URLSearchParams(params))
-    return await response.json()
+    try {
+      const response = await fetch('http://localhost:3001/trips?' + new URLSearchParams(params))
+      return await response.json()
+    }
+    catch (e) {
+      console.error(e)
+      alert('There may have been a server error, make sure its on with "yarn startServer" and if so, check the logs!')
+    }
   }
 )
 

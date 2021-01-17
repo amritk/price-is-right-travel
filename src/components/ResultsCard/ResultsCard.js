@@ -1,7 +1,7 @@
 import './ResultsCard.css'
 import React from 'react'
 import Icon from '@material-ui/core/Icon'
-import { format } from 'date-fns'
+import { format, parse } from 'date-fns'
 
 class ResultsCard extends React.Component {
 
@@ -22,8 +22,8 @@ class ResultsCard extends React.Component {
     const trip = this.props.trip
 
     // Format the dates
-    const formattedStartDate = format(new Date(trip.start_date), 'MMM do')
-    const formattedEndDate = format(new Date(trip.end_date), 'MMM do')
+    const formattedStartDate = format(parse(trip.start_date, 'yyyy-MM-dd', new Date()), 'MMM do')
+    const formattedEndDate = format(parse(trip.end_date, 'yyyy-MM-dd', new Date()), 'MMM do')
 
     // Set background image
     const sectionStyle = {
