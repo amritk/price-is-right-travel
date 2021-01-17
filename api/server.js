@@ -56,7 +56,7 @@ app.get('/popular', (req, res) => {
  * @param { number } minPrice the lower end of the budget
  * @param { number } maxPrice the higher end of the budget
  */
-app.get('/trips', (req, res) => {
+app.get('/trips', async (req, res) => {
   
   try {
     const destination = req.query.destination 
@@ -88,6 +88,9 @@ app.get('/trips', (req, res) => {
     // Sort by price
     completeMatches = completeMatches.sort(trip => trip.price)
     partialMatches = partialMatches.sort(trip => trip.price)
+
+    // Add artificial delay to show loading
+    await new Promise(resolve => setTimeout(resolve, 5000));
     
     res.json({
       completeMatches,

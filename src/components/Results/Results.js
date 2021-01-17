@@ -1,14 +1,13 @@
 import './Results.css'
 import React from 'react'
 import ResultsCard from '../ResultsCard/ResultsCard'
+import store from '../../store/store'
 
 class Results extends React.Component {
   constructor() {
     super ()
     this.state = {
-      popular: [],
-      completeMatches: [],
-      partialMatches: []
+      popular: []
     }
   }
 
@@ -27,13 +26,25 @@ class Results extends React.Component {
     } 
   }
 
+  /**
+   * A simple function to create an array of results cards
+   * @param { array } trips the collection of trip results 
+   */
+  buildCards = trips => {
+    const cards = []
+    for (const [index, trip] of trips.entries()) {
+      cards.push(<ResultsCard key={index} trip={trip}></ResultsCard>)
+    }
+    return cards
+  }
+
   render () {
 
     // Loop on the popular cards 
-    const popular = []
-    for (const [index, trip] of this.state.popular.entries()) {
-      popular.push(<ResultsCard key={index} trip={trip}></ResultsCard>)
-    }
+    const popular = this.buildCards(this.state.popular)
+    const completeMatches = this.buildCards(store.getState().results.completeMatches)
+    const partialMatches = this.buildCards(store.getState().results.partialMatches)
+    const loading = store.getState().results.loading
 
     return (
       <div className="Results">

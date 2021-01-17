@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core'
 import React from 'react'
 import store from '../../store/store'
+import { searchTrips } from '../../store/results'
 
 class SearchBar extends React.Component {
   constructor() {
@@ -28,7 +29,7 @@ class SearchBar extends React.Component {
   async componentDidMount() {
     try {
       // Grab the list of cities from our API for the autocomplete
-      const response = await fetch("http://localhost:3001/cities")
+      const response = await fetch('http://localhost:3001/cities')
       const cities = await response.json()
 
       this.setState({
@@ -42,7 +43,6 @@ class SearchBar extends React.Component {
   }
 
   render () {
-    console.log(store.getState().results);
     return (
       <div className="SearchBar">
 
@@ -111,8 +111,15 @@ class SearchBar extends React.Component {
           </Select>
         </FormControl>
 
-        {/* Execute the search */}
+        {/* Execute the search using redux*/}
         <Button 
+          onClick={() => store.dispatch(searchTrips({
+            destination: this.state.destination,
+            startDate: this.state.startDate,
+            minPrice: this.state.minPrice,
+            maxPrice: this.state.maxPrice,
+            duration: this.state.duration
+          }))}
           disabled={ 
             !this.state.destination ||
             !this.state.startDate ||
