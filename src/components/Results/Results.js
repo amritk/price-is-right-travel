@@ -1,7 +1,25 @@
 import './Results.css'
 import React from 'react'
+import { connect } from 'react-redux'
+import Lottie from 'react-lottie'
 import ResultsCard from '../ResultsCard/ResultsCard'
 import store from '../../store/store'
+import animationData from '../../assets/animations/loading.json'
+
+const mapStateToProps = state => ({ 
+  loading: state.results.loading,
+  searched: state.results.searched
+})
+
+const lottieOptions = {
+  loop: true,
+  autoplay: true, 
+  animationData,  
+  rendererSettings: {
+    preserveAspectRatio: 'xMidYMid slice'
+  }
+}
+
 
 class Results extends React.Component {
   constructor() {
@@ -10,13 +28,13 @@ class Results extends React.Component {
       popular: []
     }
   }
-
+  
   async componentDidMount() {
     try {
       // Grab a list of "recommendations" for the user
       const response = await fetch("http://localhost:3001/popular")
       const popular = await response.json()
-
+      
       this.setState({
         popular
       })
@@ -25,7 +43,7 @@ class Results extends React.Component {
       console.error(e)
     } 
   }
-
+  
   /**
    * A simple function to create an array of results cards
    * @param { array } trips the collection of trip results 
@@ -37,28 +55,85 @@ class Results extends React.Component {
     }
     return cards
   }
-
+  
   render () {
+    const completeMatchesExist = !!store.getState().results.completeMatches.length
+    const partialMatchesExist = !!store.getState().results.partialMatches.length
 
-    // Loop on the popular cards 
-    const popular = this.buildCards(this.state.popular)
-    const completeMatches = this.buildCards(store.getState().results.completeMatches)
-    const partialMatches = this.buildCards(store.getState().results.partialMatches)
-    const loading = store.getState().results.loading
+    // Use buffer to dynamically build element
+    const buffer = []
+    
+    // Loading state
+    if (this.props.loading) {
+      buffer.push(
+        <Lottie 
+          options={lottieOptions}
+          height={400}
+          width={400}
+          key="loading"
+        />
+        )
+      }
+      // Results
+      else if (completeMatchesExist || partialMatchesExist) {
+        
+        // Build cards for matches
+        const completeMatches = this.buildCards(store.getState().results.completeMatches)
+        const partialMatches = this.buildCards(store.getState().results.partialMatches)
+        let subheader = 'There were no perfect matches, however these fit some of your requirements:'
+        
+        // Render complete matches
+        if (completeMatchesExist) {
+        subheader = 'Trips you may enjoy'
+        buffer.push(
+          <div key="completeMatchesExist">
+            <span className="subheader">Perfect matches for you</span>
+            <div className="popular">
+              { completeMatches }
+            </div>
+          </div>
+        )
+      }
+      // Render partial matches
+      if (partialMatchesExist) {
+        buffer.push(
+          <div key="partialMatchesExist">
+            <span className="subheader">{ subheader }</span>
+            <div className="popular">
+              { partialMatches }
+            </div>
+          </div>
+        )
+      }
+    }
+    // Popular trips, default state as well as empty state handling
+    else {
+      const popular = this.buildCards(this.state.popular)
+      let text = 'Recommendations for you'
 
-    return (
-      <div className="Results">
-        <div className="recommendations">
-          <span className="subheader">Recommendations for you</span>
-          
-          {/* Popular cards */}
+      // For empty state, show the popular results
+      if (this.props.searched && !completeMatchesExist && !partialMatchesExist) {
+        text = 'There were no search results, here are some other trips for you:'
+      }
+
+      buffer.push(
+        <div key="popular">
+          <span className="subheader">{ text }</span>
           <div className="popular">
             { popular }
           </div>
+        </div>
+      )
+    }
+    
+    return (
+      <div className="recommendations">
+        <div className="Results">
+          { buffer }
         </div>
       </div>
     )
   }
 }
 
-export default Results
+export default connect(mapStateToProps)(Results)

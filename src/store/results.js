@@ -3,7 +3,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 const initialState =  {
   loading: false,
   completeMatches: [],
-  partialMatches: []
+  partialMatches: [],
+  searched: false
 }
 
 // Use thunk to fetch from API
@@ -28,6 +29,7 @@ const resultsSlice = createSlice({
       state.completeMatches = action.payload.completeMatches
       state.partialMatches = action.payload.partialMatches
       state.loading = false
+      state.searched = true
     }
   }
 })
