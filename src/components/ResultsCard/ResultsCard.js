@@ -1,5 +1,7 @@
 import './ResultsCard.css'
 import React from 'react'
+import Icon from '@material-ui/core/Icon'
+import { format } from 'date-fns'
 
 class ResultsCard extends React.Component {
 
@@ -18,19 +20,44 @@ class ResultsCard extends React.Component {
 
   render () {
     const trip = this.props.trip
+
+    // Format the dates
+    const formattedStartDate = format(new Date(trip.start_date), 'MMM do')
+    const formattedEndDate = format(new Date(trip.end_date), 'MMM do')
+
     // Set background image
     const sectionStyle = {
       backgroundImage: `url(${this.state.image})`
     }
 
     return (
-      <div className="ResultsCard" style={sectionStyle}>
-        <div className="title">
-          { trip.destination }
-          <br></br>
-          { trip.price }
-          <br></br>
-          { trip.start_date }
+      <div 
+        className="ResultsCard" 
+        onClick={() => window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank')} 
+        style={sectionStyle}
+      >
+        <div className="info">
+          {/* Left column */}
+          <div>
+            <div className="destination">
+              { trip.destination }
+            </div>
+            <div className="start-date">
+              <Icon fontSize="small">flight_takeoff</Icon>
+              { formattedStartDate }
+            </div>
+          </div>
+
+          {/* Right Column */}
+          <div>
+            <div className="price">
+              $ { trip.price }
+            </div>
+            <div className="end-date">
+              { formattedEndDate }
+              <Icon fontSize="small">flight_land</Icon>
+            </div>
+          </div>
         </div>
       </div>
     )
