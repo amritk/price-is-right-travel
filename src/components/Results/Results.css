@@ -12,6 +12,7 @@ span.subheader {
 .popular {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
   padding-top: 24px;
+  /* For the margin */
+  margin-right: -16px;
 }

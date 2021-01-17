@@ -1,7 +1,8 @@
 .ResultsCard {
   width: 24%;
   height: 200px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
+  margin-right: 12px;
   background-size: cover;
   border-radius: 5px;
   overflow: hidden;
