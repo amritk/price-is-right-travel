@@ -22,9 +22,6 @@ class ResultsCard extends React.Component {
     const trip = this.props.trip
 
     // Format the dates
-    console.log(trip);
-    console.log(trip.start_date);
-    console.log(new Date(trip.start_date))
     const formattedStartDate = format(new Date(trip.start_date), 'MMM do')
     const formattedEndDate = format(new Date(trip.end_date), 'MMM do')
 
