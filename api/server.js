@@ -27,7 +27,7 @@ app.get('/cities', (req, res) => {
     res.json(unique)
   }
   catch (e) {
-    console.log(e)
+    console.error(e)
     res.send('There was an unexpected error')
   }
 })
@@ -43,7 +43,7 @@ app.get('/popular', (req, res) => {
     res.json(popular)
   }
   catch (e) {
-    console.log(e)
+    console.error(e)
     res.send('There was an unexpected error')
   }
 })
@@ -62,35 +62,63 @@ app.get('/trips', async (req, res) => {
     const destination = req.query.destination 
     const minPrice = parseFloat(req.query.minPrice)
     const maxPrice = parseFloat(req.query.maxPrice)
-    const startDate = new Date(req.query.startDate)
-    const endDate = new Date(req.query.endDate)
+    const duration = req.query.duration
+
+    // Force statDate to be same format 
+    const startDateSplit = req.query.startDate.split('-')
+    const startDate = new Date(`${startDateSplit[1]}/${startDateSplit[2]}/${startDateSplit[0]}`)
     
     let completeMatches = []
     let partialMatches = []
     
     // Using a simple loop for "querying"
     trips.forEach(trip => {
+
+      // Check if trip passes query parameters
       const destinationPasses = destination.toLowerCase() === trip.destination.toLowerCase()
-      const datePasses = new Date(trip.start_date).getTime() === startDate.getTime() 
-      && new Date(trip.end_date).getTime() === endDate.getTime()
       const pricePasses = trip.price >= minPrice && trip.price <= maxPrice
+      const startDatePasses = new Date(trip.start_date).getTime() === startDate.getTime() 
       
+      // Duration is a bit more complex, values of 
+      // 1 = 1 night
+      // 2 = 2-3 nights
+      // 3 = 3-5 nights
+      // 5 = 5-8 nights
+      let lower = 1
+      let upper = 1
+      switch(parseInt(duration)) {
+        case 2:
+          lower = 2
+          upper = 3
+          break;
+        case 3:
+          lower = 3
+          upper = 5
+          break;
+        case 5:
+          lower = 5
+          upper = 8
+          break;
+      }
+      // Set into lower and upper dates
+      const durationPasses = lower <= trip.duration && trip.duration <= upper
+
       // We have a perfect match
-      if (destinationPasses && pricePasses && datePasses) {
+      if (destinationPasses && pricePasses && startDatePasses && durationPasses) {
         completeMatches.push(trip)
       }
       // We have a partial match
-      else if (destinationPasses || pricePasses || datePasses) {
+      else if (destinationPasses || pricePasses || startDatePasses && durationPasses) {
         partialMatches.push(trip)
       }
     })
 
     // Sort by price
-    completeMatches = completeMatches.sort(trip => trip.price)
-    partialMatches = partialMatches.sort(trip => trip.price)
+    completeMatches = completeMatches.sort((a, b) => a.price - b.price)
+    partialMatches = partialMatches.sort((a, b) => a.price - b.price).slice(0, 8)
 
     // Add artificial delay to show loading
-    await new Promise(resolve => setTimeout(resolve, 5000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
     res.json({
       completeMatches,
@@ -98,7 +126,7 @@ app.get('/trips', async (req, res) => {
     })
   }
   catch(e) {
-    console.log(e)
+    console.error(e)
     res.send('There was an unexpected error')
   }
 })
