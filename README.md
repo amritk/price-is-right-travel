@@ -1,5 +1,5 @@
 # Price is Right Travel app
-My first attempt at a react app. Going in with no prioer react knowledge was fun and made it more of a challenge than it should have been.
+My first attempt at a react app. Going in with no prior react knowledge was fun and made it more of a challenge than it should have been.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
